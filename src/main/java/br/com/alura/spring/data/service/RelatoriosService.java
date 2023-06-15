@@ -1,6 +1,7 @@
 package br.com.alura.spring.data.service;
 
 import br.com.alura.spring.data.orm.Funcionario;
+import br.com.alura.spring.data.orm.FuncionarioProjecao;
 import br.com.alura.spring.data.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ public class RelatoriosService {
             System.out.println("0 - Sair");
             System.out.println("1 - Busca funcionario nome");
             System.out.println("2 - Busca funcionario nome, data contratacao e salario maior");
+            System.out.println("3 - Busca funcionario data contratacao");
+            System.out.println("4 - Pesquisa funcionario salario");
 
 
             int action = scanner.nextInt();
@@ -37,6 +40,13 @@ public class RelatoriosService {
 
                 case 2:
                     buscaFuncionarioNomeSalarioMaiorData(scanner);
+                    break;
+
+                case 3:
+                    buscaFuncionarioDataContratacao(scanner);
+                    break;
+                case 4:
+                    pesquisaFuncionarioSlario();
                     break;
 
                 default:
@@ -66,7 +76,23 @@ public class RelatoriosService {
         System.out.println("Qual salario deseja pesquisar:");
         Double salario = scanner.nextDouble();
 
-        List<Funcionario> list = funcionarioRepository.findNomeSalarioMaiorDataContratacao(nome,salario,localDate);
+        List<Funcionario> list = funcionarioRepository.findNomeSalarioMaiorDataContratacao(nome, salario, localDate);
         list.forEach(System.out::println);
     }
+
+    private void buscaFuncionarioDataContratacao(Scanner scanner) {
+        System.out.println("Qual data deseja pesquisar:");
+        String data = scanner.next();
+        LocalDate localDate = LocalDate.parse(data, formatter);
+
+        List<Funcionario> list = funcionarioRepository.findDataContratacaoMaior(localDate);
+        list.forEach(System.out::println);
+    }
+
+    private void pesquisaFuncionarioSlario() {
+        List<FuncionarioProjecao> list = funcionarioRepository.findFuncionarioSalario();
+        list.forEach(f -> System.out.println("Funcionario: id: " + f.getId() +
+                " | nome: " + f.getNome() + " | salario: " + f.getSalario()));
+    }
+
 }
